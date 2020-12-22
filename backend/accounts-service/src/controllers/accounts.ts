@@ -1,13 +1,18 @@
-import { Request, Response } from 'express'
-import { IAccount } from '../models/account'
+import { Request, Response } from 'express';
+import { IAccount } from '../models/account';
+import AccountRepository, { AccountModel } from '../models/accountModel';
 
 const accounts: IAccount[] = [] //Definido que a variavel deve ser um array de IAccount que e o modelo definido no Model
 
 
 
-function getAccounts(req: Request, res: Response, next: any) {
-  res.json(accounts);
+async function getAccounts(req: Request, res: Response, next: any) {
+  const accounts = await AccountRepository.findAll<AccountModel>(); // Similar ao 'Select * from table' utilizando Generics
   //retorna JSON com a listagem das contas atribuidas na variavel accounts
+  res.json(accounts.map(item => { // Limpando as senhas
+    item.password = '';
+    return item;
+  }));
 };
 
 

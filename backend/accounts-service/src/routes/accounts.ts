@@ -1,7 +1,6 @@
 import {Router, Request, Response} from 'express';
 import Joi from 'joi';
 import accountsController from '../controllers/accounts';
-import {accountSchema, loginSchema} from '../models/account';
 import { validateAccount, validateLogin } from './middlewares'
 
 
