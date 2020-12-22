@@ -2,7 +2,7 @@
 import {Router, Request, Response} from 'express';
 import Joi from 'joi';
 import accountsController from '../controllers/accounts';
-import {accountSchema, loginSchema} from '../models/account';
+import {accountSchema, loginSchema} from '../models/accountSchemas';
 
 function validateSchema(schema : Joi.ObjectSchema<any>, req: Request, res: Response, next: any) {
   // Função valida se os dados da requisição, estão de acordo com o modelo
