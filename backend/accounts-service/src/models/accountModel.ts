@@ -2,13 +2,13 @@
 import { optional } from 'joi';
 import Sequelize, { Model, Optional } from 'sequelize';
 import database from '../db';
-import {IAccount} from './account';
+import { IAccount } from './account';
 
-interface AccountCreationAttributes extends Optional<IAccount, "id">{} // Importando a heranca da interface
+interface AccountCreationAttributes extends Optional<IAccount, "id"> { } // Importando a heranca da interface
 
-export interface AccountModel extends Model<IAccount, AccountCreationAttributes>, IAccount {} // Importando o modelo baseado nas definicoes da classe
+export interface AccountModel extends Model<IAccount, AccountCreationAttributes>, IAccount { } // Importando o modelo baseado nas definicoes da classe
 
-export default database.define<AccountModel>('account', { //Criando modelo da tabela <Informa que o Id dev estar nas regras propostas na interface>
+const accountModel = database.define<AccountModel>('account', { //Criando modelo da tabela <Informa que o Id dev estar nas regras propostas na interface>
   id: { //Nome da coluna
     type: Sequelize.INTEGER.UNSIGNED, //Tipo Inteiro, somente numeros positivos
     primaryKey: true, // Define a PK
@@ -35,7 +35,41 @@ export default database.define<AccountModel>('account', { //Criando modelo da ta
   },
   domain: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   }
 
 })
+
+
+function findAll() {
+  return accountModel.findAll<AccountModel>();
+}
+
+function findById(id: number) {
+  return accountModel.findByPk<AccountModel>(id); // where id = *****
+
+}
+
+function add(account: IAccount) {
+  return accountModel.create(account);
+}
+
+async function set(id: number, account: IAccount) {
+  const originalAccount = await accountModel.findByPk<AccountModel>(id)
+  if (originalAccount !== null) {
+    originalAccount.name = account.name;
+    originalAccount.domain = account.domain;
+    originalAccount.status = account.status
+    if (!account.password) {
+      originalAccount.password = account.password
+    }
+    await originalAccount.save()
+    return originalAccount
+  }
+
+  throw new Error('Account not found')
+
+}
+
+
+export default { findAll, findById, add, set }

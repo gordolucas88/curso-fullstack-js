@@ -2,7 +2,7 @@
 import {Router, Request, Response} from 'express';
 import Joi from 'joi';
 import accountsController from '../controllers/accounts';
-import {accountSchema, loginSchema} from '../models/accountSchemas';
+import {accountSchema, loginSchema, accountUpdateSchema} from '../models/accountSchemas';
 
 function validateSchema(schema : Joi.ObjectSchema<any>, req: Request, res: Response, next: any) {
   // Função valida se os dados da requisição, estão de acordo com o modelo
@@ -24,8 +24,13 @@ function validateAccount(req: Request, res: Response, next: any){
   return validateSchema(accountSchema, req, res, next);
 }
 
+function validateUpdateAccount(req: Request, res: Response, next: any){
+
+  return validateSchema(accountUpdateSchema, req, res, next);
+}
+
 function validateLogin(req: Request, res: Response, next: any) {
   return validateSchema(loginSchema, req, res, next);
 }
 
-export { validateAccount, validateLogin }
+export { validateAccount, validateLogin, validateUpdateAccount }
